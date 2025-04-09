@@ -11,7 +11,7 @@ $ go install github.com/cloverrose/connectnew/cmd/connectnew@latest
 ### Or Build from source
 
 ```shell
-$ go build -o bin/ ./cmd/...
+$ make build
 ```
 
 ### Or Install via aqua

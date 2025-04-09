@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/cloverrose/connectnew"
 	"golang.org/x/tools/go/analysis/unitchecker"
+
+	"github.com/cloverrose/connectnew"
 )
 
 func main() { unitchecker.Main(connectnew.Analyzer) }
