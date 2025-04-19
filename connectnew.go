@@ -8,7 +8,7 @@ import (
 	"golang.org/x/tools/go/analysis"
 )
 
-const doc = "connectnew checks if &connect.Request or &connect.Response are used. Instead connect.NewRequest or connect.NewResponse should be used."
+const doc = "connectnew enforces the use of constructor functions (connect.NewRequest/connect.NewResponse) instead of direct struct initialization."
 
 // Analyzer checks if &connect.Request or &connect.Response are used.
 var Analyzer = &analysis.Analyzer{
