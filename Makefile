@@ -14,6 +14,7 @@ SHELL := env "PATH=$(PATH)" bash
 update:
 	make go/update
 	make aqua/update
+	make go/update/testdata
 
 # aqua/install installs aqua dependencies.
 .PHONY: aqua/install
@@ -57,9 +58,16 @@ fmt:
 tidy:
 	go mod tidy -v
 
-# tidy updates go dependencies.
+# go/update updates go dependencies.
 .PHONY: go/update
 go/update:
+	go get -u all
+	go mod tidy -v
+
+# go/update/testdata updates go dependencies.
+.PHONY: go/update/testdata
+go/update/testdata:
+	cd testdata/src/a
 	go get -u all
 	go mod tidy -v
 
