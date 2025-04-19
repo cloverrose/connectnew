@@ -2,6 +2,7 @@ package connectnew
 
 import (
 	"flag"
+	"fmt"
 	"go/ast"
 	"go/token"
 
@@ -21,6 +22,18 @@ var Analyzer = &analysis.Analyzer{
 
 func run(pass *analysis.Pass) (interface{}, error) {
 	for _, file := range pass.Files {
+		// Import aliasをマッピング
+		importAliases := make(map[string]struct{})
+		for _, imp := range file.Imports {
+			if imp.Path.Value == `"connectrpc.com/connect"` {
+				if imp.Name != nil {
+					importAliases[imp.Name.Name] = struct{}{}
+				} else {
+					importAliases["connect"] = struct{}{}
+				}
+			}
+		}
+
 		ast.Inspect(file, func(n ast.Node) bool {
 			// ユニリ演算式をチェック
 			if unaryExpr, ok := n.(*ast.UnaryExpr); ok {
@@ -34,12 +47,16 @@ func run(pass *analysis.Pass) (interface{}, error) {
 							if selectorExpr, ok := inst.X.(*ast.SelectorExpr); ok {
 								// セレクタが `connect.Request` または `connect.Response` かを確認
 								if ident, ok := selectorExpr.X.(*ast.Ident); ok {
-									if ident.Name == "connect" {
+									if _, isConnect := importAliases[ident.Name]; isConnect {
+										importedAs := ""
+										if ident.Name != "connect" {
+											importedAs = fmt.Sprintf(" (imported as %s)", ident.Name)
+										}
 										if selectorExpr.Sel.Name == "Request" {
-											pass.Reportf(unaryExpr.Pos(), "use of &connect.Request[T]{} detected. Use connect.NewRequest() instead.")
+											pass.Reportf(unaryExpr.Pos(), "use of &connect.Request[T]{} detected%s. Use %s.NewRequest() instead.", importedAs, ident.Name)
 										}
 										if selectorExpr.Sel.Name == "Response" {
-											pass.Reportf(unaryExpr.Pos(), "use of &connect.Response[T]{} detected. Use connect.NewResponse() instead.")
+											pass.Reportf(unaryExpr.Pos(), "use of &connect.Response[T]{} detected%s. Use %s.NewResponse() instead.", importedAs, ident.Name)
 										}
 									}
 								}
