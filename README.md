@@ -41,7 +41,7 @@ destination: bin
 plugins:
   - module: 'github.com/cloverrose/connectnew'
     import: 'github.com/cloverrose/connectnew'
-    version: v0.1.3
+    version: v0.1.4
 ```
 
 `.golangci.yml`
