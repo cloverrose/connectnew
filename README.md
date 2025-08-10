@@ -35,13 +35,13 @@ Here are reference settings
 `.custom-gcl.yml`
 
 ```yaml
-version: v2.1.2
+version: v2.3.1
 name: custom-golangci-lint
 destination: bin
 plugins:
   - module: 'github.com/cloverrose/connectnew'
     import: 'github.com/cloverrose/connectnew'
-    version: v0.1.4
+    version: v0.1.5
 ```
 
 `.golangci.yml`

@@ -61,15 +61,12 @@ tidy:
 # go/update updates go dependencies.
 .PHONY: go/update
 go/update:
-	go get -u all
-	go mod tidy -v
+	go get -u ./... && go mod tidy -v
 
 # go/update/testdata updates go dependencies.
 .PHONY: go/update/testdata
 go/update/testdata:
-	cd testdata/src/a
-	go get -u all
-	go mod tidy -v
+	cd testdata/src/a && go get -u ./... && go mod tidy -v
 
 # test runs the tests.
 .PHONY: test
@@ -80,18 +77,7 @@ test:
 # build creates the binaries.
 .PHONY: build
 build:
-	make build/pkgdep
-	make build/pkgdep-tidy
-
-# build/pkgdep creates the pkgdep binary.
-.PHONY: build/pkgdep
-build/pkgdep:
-	@CGO_ENABLED=0 go build -o bin/pkgdep -v ./cmd/pkgdep
-
-# build/pkgdep-tidy creates the pkgdep-tidy binary.
-.PHONY: build/pkgdep-tidy
-build/pkgdep-tidy:
-	@CGO_ENABLED=0 go build -o bin/pkgdep-tidy -v ./cmd/pkgdep-tidy
+	@CGO_ENABLED=0 go build -o bin/connectnew -v ./cmd/connectnew
 
 # goreleaser/local runs goreleaser locally.
 # see https://goreleaser.com/quick-start/
